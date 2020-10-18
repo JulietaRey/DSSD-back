@@ -4,7 +4,7 @@ import * as config from 'config';
 const dbConfig = config.get('db');
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
-  type: 'mysql',
+  type: 'postgres',
   host: dbConfig.host,
   port: 3306,
   password: dbConfig.password,
