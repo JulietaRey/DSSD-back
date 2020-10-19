@@ -18,8 +18,8 @@ export class ProtocolService {
     estado: string,
     puntaje?: number
   }> {
-    if (finished) {
-      const protocol = await this.protocolRepository.findOne(id);
+    const protocol = await this.protocolRepository.findOne(id);
+    if (finished) {     
       return {
         estado: 'finalizado',
         puntaje: protocol.puntaje
