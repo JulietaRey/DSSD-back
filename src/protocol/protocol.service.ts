@@ -26,7 +26,8 @@ export class ProtocolService {
       }
     }
     return {
-      estado: 'en progreso'
+      estado: 'en progreso',
+      puntaje: 0
     }
 
   }
