@@ -29,6 +29,5 @@ export class ProtocolService {
       estado: 'en progreso'
     }
 
-
   }
 }
