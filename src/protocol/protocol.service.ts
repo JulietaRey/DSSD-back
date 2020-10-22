@@ -50,7 +50,7 @@ export class ProtocolService {
     }
     return {
       estado: protocol.estado,
-      puntaje: 0
+      puntaje: protocol.puntaje
     }
 
   }
