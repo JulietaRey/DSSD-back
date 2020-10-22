@@ -8,25 +8,36 @@ export class ProtocolRepository extends Repository<Protocol> {
     const protocol = await query.getMany();
     return protocol; 
   }
+
   async updateStatus(id: number, estado: string): Promise<{
-    operacion: string
+    estado: string
   }> {
     await this.createQueryBuilder()
       .update(Protocol)
       .set({ estado: estado })
       .where("id = :id", { id: id })
       .execute();
-    //lo esta updateando bien?
-    //HACER RANDOM QUE ESPERE Y LO CAMBIE
+    
     const protocol = await this.findOne(id);
 
-    if (protocol.estado == 'en progreso'){
-      return {
-        operacion: 'protocolo iniciado con exito'
-      }
-    }
     return {
-      operacion: 'el protocolo no se pudo iniciar'
-    };
+      estado: protocol.estado
+    };    
+  }
+
+  async updatePuntaje(id: number, puntaje: number): Promise<{
+    puntaje: number
+  }> {
+    await this.createQueryBuilder()
+      .update(Protocol)
+      .set({ puntaje: puntaje })
+      .where("id = :id", { id: id })
+      .execute();
+    
+      const protocol = await this.findOne(id);
+
+      return {
+        puntaje: protocol.puntaje
+      }; 
   }
 }

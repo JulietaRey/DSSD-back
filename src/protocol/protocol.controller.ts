@@ -23,7 +23,9 @@ export class ProtocolController {
     if (data.fail) {
       throw new HttpException('Hubo un error lanzando el protocolo', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return this.protocolService.startProtocol(id);
+    const estado = this.protocolService.startProtocol(id);
+
+    return this.protocolService.executeProtocol(id);
   }
-  
+
 }

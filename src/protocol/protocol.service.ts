@@ -18,11 +18,25 @@ export class ProtocolService {
   async startProtocol(id: number): Promise<{
     operacion: string,
   }> {
-    const operacion = this.protocolRepository.updateStatus(id, 'en progreso');
+    const resultado = this.protocolRepository.updateStatus(id, 'en progreso');
     
-    return operacion;
+    return {
+      operacion: (await resultado).estado
+    };
   }
   
+  async executeProtocol(id: number): Promise<{
+    operacion: string,
+  }> {
+    await new Promise(r => setTimeout(r, 15000));
+    this.protocolRepository.updatePuntaje(id, Math.floor(Math.random()*11));
+    const resultado = this.protocolRepository.updateStatus(id, 'finalizado');
+
+    return {
+      operacion: (await resultado).estado
+    }
+  }
+
   async getProtocolStatus(id: number, finished?: number): Promise<{
     estado: string,
     puntaje?: number
