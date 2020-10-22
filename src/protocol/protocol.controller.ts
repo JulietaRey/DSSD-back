@@ -17,10 +17,12 @@ export class ProtocolController {
   }
 
   @Post(':id')
-  startProtocol(@Body() data: startProtocolDto): string {
+  startProtocol(@Param('id') id: number, @Body() data: startProtocolDto): Promise<{
+    operacion: string
+  }> {
     if (data.fail) {
       throw new HttpException('Hubo un error lanzando el protocolo', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return 'Starting protocol';
+    return this.protocolService.startProtocol(id);
   }
 }

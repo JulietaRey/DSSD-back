@@ -20,6 +20,9 @@ export class Protocol extends BaseEntity {
   fecha_fin: Date;
 
   @Column()
+  estado: string;
+  
+  @Column()
   orden: number;
 
   @Column()

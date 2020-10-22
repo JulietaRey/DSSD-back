@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { stringify } from 'querystring';
 import { Protocol } from './protocol.entity';
 import { ProtocolRepository } from './protocol.repository';
 
@@ -13,20 +14,29 @@ export class ProtocolService {
   async getAllProtocols(): Promise<Protocol[]> {
     return this.protocolRepository.getAll();
   }
+
+  async startProtocol(id: number): Promise<{
+    operacion: string,
+  }> {
+    const operacion = this.protocolRepository.updateStatus(id, 'en progreso');
+    
+    return operacion;
+  }
   
   async getProtocolStatus(id: number, finished?: number): Promise<{
     estado: string,
     puntaje?: number
   }> {
-    if (finished) {
-      const protocol = await this.protocolRepository.findOne(id);     
+    const protocol = await this.protocolRepository.findOne(id);  
+    if (finished) {   
       return {
-        estado: 'finalizado',
+        estado: protocol.estado,
         puntaje: protocol.puntaje
       }
     }
     return {
-      estado: 'en progreso',
+      estado: protocol.estado,
+      puntaje: 0
     }
 
   }
