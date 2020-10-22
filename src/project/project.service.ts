@@ -13,7 +13,7 @@ export class ProjectService {
     private protocolRepository: ProtocolRepository,
   ) {}
 
-  async checkProtocol(projectId: number, protocolId: number): Promise<boolean> {
+  async checkProtocol(projectId: number, protocolId: number) {
     const project = await this.projectRepository.findOne(
       {
         id: projectId,
@@ -25,7 +25,16 @@ export class ProjectService {
     if (!project) {
       throw new HttpException('El proyecto no existe', HttpStatus.NOT_FOUND);
     }
-    return project.protocolIds.some(id => id == protocolId);
+    const protocol = await this.protocolRepository.findOne(protocolId);
+    if (!protocol) {
+      throw new HttpException('No existe este protocolo', HttpStatus.NOT_FOUND);
+    }
+    if (!project.protocolIds.some(id => id == protocolId)) {
+      throw new HttpException(
+        'El protocolo no pertenece al proyecto especificado',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async executeProtocol(
@@ -43,6 +52,22 @@ export class ProjectService {
 
     return {
       operacion: 'Comenzando protocolo...',
+    };
+  }
+
+  async getProtocolStatus(
+    id: number,
+  ): Promise<{
+    estado: string;
+    puntaje?: number;
+  }> {
+    const protocol = await this.protocolRepository.findOne(id);
+    if (!protocol) {
+      throw new HttpException('No existe este protocolo', HttpStatus.NOT_FOUND);
+    }
+    return {
+      estado: protocol.estado,
+      puntaje: protocol.puntaje,
     };
   }
 }

@@ -1,9 +1,17 @@
-import { Controller, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ProjectService } from './project.service';
 
 @Controller('project')
+@UseGuards(AuthGuard())
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) { }
+  constructor(private readonly projectService: ProjectService) {}
 
   @Post(':projectId/protocol/:protocolId')
   async startProtocol(
@@ -12,11 +20,21 @@ export class ProjectController {
   ): Promise<{
     operacion: string;
   }> {
-    const protocolBelongsToProject = await this.projectService.checkProtocol(projectId, protocolId);
-    if (!protocolBelongsToProject) {
-      throw new HttpException('El protocolo no pertenece al proyecto especificado', HttpStatus.BAD_REQUEST);
-    }
+    await this.projectService.checkProtocol(projectId, protocolId);
 
     return this.projectService.executeProtocol(protocolId);
+  }
+
+  @Get(':projectId/protocol/:protocolId/status')
+  async getProtocolStatusFinished(
+    @Param('projectId') projectId: number,
+    @Param('protocolId') protocolId: number,
+  ): Promise<{
+    estado: string;
+    puntaje?: number;
+  }> {
+    await this.projectService.checkProtocol(projectId, protocolId);
+
+    return this.projectService.getProtocolStatus(protocolId);
   }
 }
