@@ -3,10 +3,10 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
+  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import { Member } from './member.entity';
 
@@ -19,11 +19,13 @@ export class Project extends BaseEntity {
   @Column() fecha_inicio: Date;
   @Column() fecha_fin: Date;
 
-  @OneToOne(type => Member)
-  @JoinColumn()
+  @ManyToOne(type => Member, member => member.projects)
   owner: Member;
 
   @OneToMany(() => Protocol, protocol => protocol.project)
   protocols: Protocol[];
+
+  @RelationId((project: Project) => project.protocols)
+  protocolIds: number[]
 
 }

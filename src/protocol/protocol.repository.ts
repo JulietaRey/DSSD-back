@@ -1,4 +1,5 @@
 import { Repository, EntityRepository } from 'typeorm';
+import { ProtocolStatus } from './protocol.dto';
 import { Protocol } from './protocol.entity';
 
 @EntityRepository(Protocol)
@@ -9,35 +10,18 @@ export class ProtocolRepository extends Repository<Protocol> {
     return protocol; 
   }
 
-  async updateStatus(id: number, estado: string): Promise<{
-    estado: string
-  }> {
-    await this.createQueryBuilder()
-      .update(Protocol)
-      .set({ estado: estado })
-      .where("id = :id", { id: id })
-      .execute();
-    
+  async updateProtocol(id: number, params: any) {
     const protocol = await this.findOne(id);
-
-    return {
-      estado: protocol.estado
-    };    
+    const updated = {
+      ...protocol, ...params
+    };
+    this.save(updated);
   }
 
-  async updatePuntaje(id: number, puntaje: number): Promise<{
-    puntaje: number
-  }> {
-    await this.createQueryBuilder()
-      .update(Protocol)
-      .set({ puntaje: puntaje })
-      .where("id = :id", { id: id })
-      .execute();
-    
-      const protocol = await this.findOne(id);
-
-      return {
-        puntaje: protocol.puntaje
-      }; 
+  async simulateStart(id: number, puntaje: number) {
+    this.updateProtocol(id, {
+      puntaje,
+      estado: ProtocolStatus.finished
+    })
   }
 }

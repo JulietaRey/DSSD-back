@@ -1,7 +1,8 @@
 import { Activity } from "src/activity/activity.entity";
 import { Member } from "src/project/member.entity";
 import { Project } from "src/project/project.entity";
-import { BaseEntity, Column, Entity, JoinColumn,  JoinTable,  ManyToMany,  OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn,  JoinTable,  ManyToMany,  ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ProtocolStatus } from "./protocol.dto";
 
 @Entity()
 export class Protocol extends BaseEntity {
@@ -9,8 +10,7 @@ export class Protocol extends BaseEntity {
 
   @Column() nombre: string;
 
-  @OneToOne(()=> Member)
-  @JoinColumn()  
+  @ManyToOne(()=> Member, member => member.protocols)
   owner: Member;
 
   @Column()
@@ -20,7 +20,7 @@ export class Protocol extends BaseEntity {
   fecha_fin: Date;
 
   @Column({ nullable: true})
-  estado: string;
+  estado: ProtocolStatus;
   
   @Column()
   orden: number;
@@ -28,10 +28,10 @@ export class Protocol extends BaseEntity {
   @Column()
   local: boolean;
 
-  @Column()
+  @Column({ nullable: true})
   puntaje: number;
 
-  @OneToOne(() => Project)
+  @ManyToOne(() => Project, project=> project.protocols)
   @JoinColumn()
   project: Project;
   
