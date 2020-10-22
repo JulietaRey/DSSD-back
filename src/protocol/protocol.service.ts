@@ -19,7 +19,7 @@ export class ProtocolService {
     operacion: string,
   }> {
     const resultado = this.protocolRepository.updateStatus(id, 'en progreso');
-    
+    this.protocolRepository.updatePuntaje(id, 0);
     return {
       operacion: (await resultado).estado
     };
