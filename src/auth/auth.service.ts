@@ -4,19 +4,21 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserRepository } from './user.repository';
 import { CreateUserDto, UserAuthDto, JwtPayload } from './user.dto';
+import { BonitaRepository } from './bonita.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository) private userRepository: UserRepository,
     private jwtService: JwtService,
+    private bonitaRepository: BonitaRepository,
   ) {}
 
   async signUp(userData: CreateUserDto) {
     return this.userRepository.signUp(userData);
   }
 
-  async signIn(userData: UserAuthDto): Promise<{ accessToken: string }> {
+  async signIn(userData: UserAuthDto): Promise<{ accessToken: string, bonitaToken: string }> {
     const success = await this.userRepository.signIn(userData);
     if (!success) {
       throw new UnauthorizedException();
@@ -24,6 +26,7 @@ export class AuthService {
 
     const payload: JwtPayload = { username: userData.username };
     const accessToken = await this.jwtService.sign(payload);
-    return { accessToken };
+    const bonitaToken = await this.bonitaRepository.signIn();
+    return { accessToken, bonitaToken };
   }
 }
