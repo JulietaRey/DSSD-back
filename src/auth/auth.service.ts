@@ -18,7 +18,7 @@ export class AuthService {
     return this.userRepository.signUp(userData);
   }
 
-  async signIn(userData: UserAuthDto): Promise<{ accessToken: string, bonitaToken: string }> {
+  async signIn(userData: UserAuthDto): Promise<{ accessToken: string, bonitaToken: string, JSESSIONID: string }> {
     const success = await this.userRepository.signIn(userData);
     if (!success) {
       throw new UnauthorizedException();
@@ -26,7 +26,9 @@ export class AuthService {
 
     const payload: JwtPayload = { username: userData.username };
     const accessToken = await this.jwtService.sign(payload);
-    const bonitaToken = await this.bonitaRepository.signIn();
-    return { accessToken, bonitaToken };
+    const bonitaResponse = await this.bonitaRepository.signIn();
+    const bonitaToken = bonitaResponse.bonitaToken;
+    const JSESSIONID = bonitaResponse.JSESSIONID;
+    return { accessToken, bonitaToken, JSESSIONID };
   }
 }
