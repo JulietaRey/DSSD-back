@@ -37,4 +37,14 @@ export class ProjectController {
 
     return this.projectService.getProtocolStatus(protocolId);
   }
+
+  @Get('start')
+  async startProject(): Promise<{
+    processInstanceId: number;
+  }> {
+    
+    const processInstanceId = this.projectService.startProject();    
+    
+    return processInstanceId;
+  }
 }
