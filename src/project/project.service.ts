@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProtocolStatus } from 'src/protocol/protocol.dto';
 import { ProtocolRepository } from 'src/protocol/protocol.repository';
 import { ProjectRepository } from './project.repository';
+import { BonitaRepository } from 'src/auth/bonita.repository';
 
 @Injectable()
 export class ProjectService {
@@ -11,6 +12,7 @@ export class ProjectService {
     private projectRepository: ProjectRepository,
     @InjectRepository(ProtocolRepository)
     private protocolRepository: ProtocolRepository,
+    private bonitaRepository: BonitaRepository,
   ) {}
 
   async checkProtocol(projectId: number, protocolId: number) {
@@ -69,5 +71,14 @@ export class ProjectService {
       estado: protocol.estado,
       puntaje: protocol.puntaje,
     };
+  }
+
+  async startProject(): Promise<{ 
+    processInstanceId: number
+  }> {
+
+    const processInstanceId = await this.bonitaRepository.startProcess();
+    //TODO guardar el processInstanceId (es el caseId de bonita) como atributo del proyecto en la DB
+    return { processInstanceId };
   }
 }
