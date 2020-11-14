@@ -13,6 +13,7 @@ export class AuthController {
 
   @Post('signin')
   signIn(@Body(ValidationPipe) userData: UserAuthDto): Promise<{accessToken: string}> {
+    console.log(userData, 'controller');
     return this.authService.signIn(userData);
   }
 
