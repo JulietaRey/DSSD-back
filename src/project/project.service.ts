@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Protocol, ProtocolStatus } from 'src/protocol/protocol.dto';
+import {  ProtocolStatus } from 'src/protocol/protocol.dto';
 import { ProtocolRepository } from 'src/protocol/protocol.repository';
 import { configureProjectDto } from './project.dto';
 import { ProjectRepository } from './project.repository';
+import { BonitaRepository } from 'src/auth/bonita.repository';
 
 @Injectable()
 export class ProjectService {
@@ -12,7 +13,8 @@ export class ProjectService {
     private projectRepository: ProjectRepository,
     @InjectRepository(ProtocolRepository)
     private protocolRepository: ProtocolRepository,
-  ) {}
+    private bonitaRepository: BonitaRepository,
+  ) { }
 
   async checkProtocol(projectId: number, protocolId: number) {
     const project = await this.projectRepository.findOne(
@@ -71,14 +73,14 @@ export class ProjectService {
       puntaje: protocol.puntaje,
     };
   }
-  async createProject(projectDto: configureProjectDto){
+  async createProject(projectDto: configureProjectDto) {
     const project = await this.projectRepository.createProject({
       nombre: projectDto.name,
       caseId: projectDto.caseId,
       fecha_inicio: projectDto.startDate,
       fecha_fin: projectDto.endDate,
     }, projectDto.ownerId);
-    await this.protocolRepository.createProtocols(projectDto.protocolList, project);    
+    await this.protocolRepository.createProtocols(projectDto.protocolList, project);
 
   }
 }

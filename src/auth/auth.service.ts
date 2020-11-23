@@ -4,12 +4,14 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserRepository } from './user.repository';
 import { CreateUserDto, UserAuthDto, JwtPayload } from './user.dto';
+import { BonitaRepository } from './bonita.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository) private userRepository: UserRepository,
     private jwtService: JwtService,
+    private bonitaRepository: BonitaRepository,
   ) {}
 
   async signUp(userData: CreateUserDto) {
