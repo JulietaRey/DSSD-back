@@ -1,5 +1,6 @@
+import { Project } from 'src/project/project.entity';
 import { Repository, EntityRepository } from 'typeorm';
-import { ProtocolStatus } from './protocol.dto';
+import { ProtocolStatus, Protocol as ProtocolDto } from './protocol.dto';
 import { Protocol } from './protocol.entity';
 
 @EntityRepository(Protocol)
@@ -23,5 +24,18 @@ export class ProtocolRepository extends Repository<Protocol> {
       puntaje,
       estado: ProtocolStatus.finished
     })
+  }
+
+  async createProtocols(protocolList: ProtocolDto[], project: Project) {
+    return Promise.all(protocolList.map(protocol => {
+      const newProtocol = new Protocol();
+      Object.assign(newProtocol, protocol, {
+        project,
+        fecha_inicio: project.fecha_inicio,
+        fecha_fin: project.fecha_fin,
+        estado: ProtocolStatus.ready
+      })
+      return newProtocol.save();
+    }))
   }
 }

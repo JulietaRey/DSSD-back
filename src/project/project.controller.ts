@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -6,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { configureProjectDto, createProjectDto } from './project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -36,5 +38,10 @@ export class ProjectController {
     await this.projectService.checkProtocol(projectId, protocolId);
 
     return this.projectService.getProtocolStatus(protocolId);
+  }
+
+  @Post()
+  async configureProject(@Body() projectDto: configureProjectDto) {
+    return this.projectService.createProject(projectDto);
   }
 }

@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 
 import { User } from './user.entity';
 import { CreateUserDto, UserAuthDto } from './user.dto';
+import { Member } from 'src/project/member.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -18,6 +19,12 @@ export class UserRepository extends Repository<User> {
     Object.assign(user, userData, { salt });
     try {
       await user.save();
+      const member = new Member();
+      Object.assign(member, {
+        id: user.id,
+        nombre: `${user.firstName} ${user.lastName}`,
+      });
+      await member.save();
     } catch (error) {
       // TODO: build error constants file
       if (error.code === '23505') {
@@ -28,10 +35,15 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async signIn(userData: UserAuthDto): Promise<boolean> {
+  async signIn(userData: UserAuthDto): Promise<false | {userId: number}> {
     const { username, password } = userData;
     const user = await this.findOne({ username });
-    return (user && user.validatePassword(password)) || false;
+    if (user && user.validatePassword(password)) {
+      return {
+        userId: user.id
+      }
+    }
+    return false;
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

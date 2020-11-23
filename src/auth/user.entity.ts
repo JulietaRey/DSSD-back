@@ -5,8 +5,8 @@ import * as bcrypt from 'bcrypt';
 @Unique(['username'])
 @Unique(['email'])
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   username: string;
@@ -25,6 +25,11 @@ export class User extends BaseEntity {
 
   @Column()
   email: string;
+
+  @Column({
+    nullable: true
+  })
+  rolId: number;
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

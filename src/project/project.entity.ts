@@ -19,6 +19,8 @@ export class Project extends BaseEntity {
   @Column() fecha_inicio: Date;
   @Column() fecha_fin: Date;
 
+  @Column() caseId: number;
+
   @ManyToOne(type => Member, member => member.projects)
   owner: Member;
 

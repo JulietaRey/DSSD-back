@@ -16,14 +16,14 @@ export class AuthService {
     return this.userRepository.signUp(userData);
   }
 
-  async signIn(userData: UserAuthDto): Promise<{ accessToken: string }> {
-    const success = await this.userRepository.signIn(userData);
-    if (!success) {
+  async signIn(userData: UserAuthDto): Promise<{ accessToken: string, userId: number }> {
+    const signInResponse = await this.userRepository.signIn(userData);
+    if (!signInResponse) {
       throw new UnauthorizedException();
     }
 
     const payload: JwtPayload = { username: userData.username };
     const accessToken = await this.jwtService.sign(payload);
-    return { accessToken };
+    return { accessToken, userId: signInResponse.userId };
   }
 }

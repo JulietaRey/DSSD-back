@@ -31,6 +31,11 @@ export class Protocol extends BaseEntity {
   @Column({ nullable: true})
   puntaje: number;
 
+  @Column({
+    default: 0
+  })
+  ejecuciones: number;
+
   @ManyToOne(() => Project, project=> project.protocols)
   @JoinColumn()
   project: Project;
