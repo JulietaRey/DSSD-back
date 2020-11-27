@@ -35,12 +35,13 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async signIn(userData: UserAuthDto): Promise<false | {userId: number}> {
+  async signIn(userData: UserAuthDto): Promise<false | {userId: number, rolId: number}> {
     const { username, password } = userData;
     const user = await this.findOne({ username });
     if (user && user.validatePassword(password)) {
       return {
-        userId: user.id
+        userId: user.id,
+        rolId: user.rolId,
       }
     }
     return false;

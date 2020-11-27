@@ -31,10 +31,9 @@ export class ProtocolRepository extends Repository<Protocol> {
       const newProtocol = new Protocol();
       Object.assign(newProtocol, protocol, {
         project,
-        fecha_inicio: project.fecha_inicio,
-        fecha_fin: project.fecha_fin,
-        estado: ProtocolStatus.ready
-      })
+        fecha_inicio: protocol.startDate,
+        fecha_fin: protocol.endDate,
+      });
       return newProtocol.save();
     }))
   }

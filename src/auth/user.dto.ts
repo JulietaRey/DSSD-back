@@ -21,6 +21,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+  @IsNotEmpty()
+  rolId: number;
 }
 
 export class UserAuthDto {

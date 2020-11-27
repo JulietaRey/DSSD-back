@@ -18,7 +18,7 @@ export class AuthService {
     return this.userRepository.signUp(userData);
   }
 
-  async signIn(userData: UserAuthDto): Promise<{ accessToken: string, userId: number }> {
+  async signIn(userData: UserAuthDto): Promise<{ accessToken: string, userId: number, rolId: number }> {
     const signInResponse = await this.userRepository.signIn(userData);
     if (!signInResponse) {
       throw new UnauthorizedException();
@@ -26,6 +26,6 @@ export class AuthService {
 
     const payload: JwtPayload = { username: userData.username };
     const accessToken = await this.jwtService.sign(payload);
-    return { accessToken, userId: signInResponse.userId };
+    return { accessToken, userId: signInResponse.userId, rolId: signInResponse.rolId };
   }
 }

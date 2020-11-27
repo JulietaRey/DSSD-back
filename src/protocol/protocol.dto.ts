@@ -4,12 +4,10 @@ export enum ProtocolStatus {
   ready = 'listo',
 }
 
-interface startProtocolDto {
-  fail: boolean;
-}
-
 export interface Protocol {
   nombre: string;
   orden: number;
   local: boolean;
+  endDate: Date;
+  startDate: Date;
 }

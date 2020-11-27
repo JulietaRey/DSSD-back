@@ -5,6 +5,7 @@ import { ProtocolRepository } from 'src/protocol/protocol.repository';
 import { configureProjectDto } from './project.dto';
 import { ProjectRepository } from './project.repository';
 import { BonitaRepository } from 'src/auth/bonita.repository';
+import { Protocol } from 'src/protocol/protocol.entity';
 
 @Injectable()
 export class ProjectService {
@@ -82,5 +83,14 @@ export class ProjectService {
     }, projectDto.ownerId);
     await this.protocolRepository.createProtocols(projectDto.protocolList, project);
 
+  }
+
+  async getProjectList(ownerId: number) {
+    return this.projectRepository.getAll(ownerId);
+  }
+
+  async getProtocolByOrder(projectId: number, order: number): Promise<Protocol> {
+    const protocols = await this.projectRepository.getProjectProtocols(projectId);
+    return protocols.find(protocol => protocol.orden == order);
   }
 }
