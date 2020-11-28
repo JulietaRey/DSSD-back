@@ -36,7 +36,7 @@ export class Protocol extends BaseEntity {
   })
   ejecuciones: number;
 
-  @ManyToOne(() => Project, project=> project.protocols)
+  @ManyToOne(() => Project, project=> project.protocols, {eager: true})
   @JoinColumn()
   project: Project;
   

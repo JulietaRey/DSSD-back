@@ -1,14 +1,30 @@
+import { Member } from 'src/project/member.entity';
 import { Project } from 'src/project/project.entity';
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository, EntityRepository, IsNull, Not, In } from 'typeorm';
 import { ProtocolStatus, Protocol as ProtocolDto } from './protocol.dto';
 import { Protocol } from './protocol.entity';
 
 @EntityRepository(Protocol)
 export class ProtocolRepository extends Repository<Protocol> {
-  async getAll(): Promise<Protocol[]> {
-    const query = this.createQueryBuilder('protocol');
-    const protocol = await query.getMany();
-    return protocol; 
+  async getAll(ownerId: number): Promise<Protocol[]> {
+    const owner = await Member.findOne(ownerId, { relations: ['protocols']});
+    const ownedProtocols = owner.protocols || [];
+    const unassignedProtocols = await this.find({ 
+      relations: ['owner'],
+      where: [
+        {
+          local: true,
+          owner: IsNull(),
+          estado: Not(In([ProtocolStatus.inProgress, ProtocolStatus.finished])),
+        }, {
+          owner: IsNull(),
+          estado: IsNull(),
+          local: true,
+        }
+      ]
+      
+    });
+    return [...ownedProtocols, ...unassignedProtocols];
   }
 
   async updateProtocol(id: number, params: any) {
