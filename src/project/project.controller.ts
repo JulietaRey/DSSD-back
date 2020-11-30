@@ -60,4 +60,20 @@ export class ProjectController {
   ) : Promise<Protocol> {
     return this.projectService.getProtocolByOrder(projectId, order);
   }
+
+  @Post(':caseId/protocol')
+  async startProtocolExecution(
+    @Param('caseId') caseId: number,
+    @Body('order') order: number, 
+  ) : Promise<{ 
+    protocolResult: number
+  }> {
+    //console.log("caseId:"+caseId);
+    //console.log("order:"+order);
+    return {
+      //aca se llama para calcular esto y actualizar la DB
+      protocolResult: 5
+    };
+  }
+
 }
