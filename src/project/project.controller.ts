@@ -27,6 +27,7 @@ export class ProjectController {
   }> {
     await this.projectService.checkProtocol(projectId, protocolId);
 
+    //este return en realidad deberia devolver el puntaje y LUEGO de que termina
     return this.projectService.executeProtocol(protocolId);
   }
 
@@ -70,6 +71,14 @@ export class ProjectController {
   }> {
     //console.log("caseId:"+caseId);
     //console.log("order:"+order);
+    const project = await this.projectService.getProjectByCaseId(caseId);
+    console.log(project);
+    const protocol = await this.projectService.getProtocolByOrder(project.id, order);
+
+    //esto no sabia bien cómo encararlo
+    const puntaje = await fetch(`http://localhost:5000/project/${project.id}/protocol/${protocol.id}`, {
+      method: 'POST'
+    });
     return {
       //aca se llama para calcular esto y actualizar la DB
       protocolResult: 5

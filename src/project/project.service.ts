@@ -6,6 +6,7 @@ import { configureProjectDto } from './project.dto';
 import { ProjectRepository } from './project.repository';
 import { BonitaRepository } from 'src/auth/bonita.repository';
 import { Protocol } from 'src/protocol/protocol.entity';
+import { Project } from './project.entity';
 
 @Injectable()
 export class ProjectService {
@@ -94,5 +95,9 @@ export class ProjectService {
     return protocols.find(protocol => protocol.orden == order);
   }
 
+  async getProjectByCaseId(caseId: number): Promise<Project> {
+    const project = await this.projectRepository.getProjectByCaseId(caseId);
+    return project;
+  }
 
 }

@@ -27,4 +27,15 @@ export class ProjectRepository extends Repository<Project> {
     await project.save();
     return project;
   }
+
+  async getProjectByCaseId(caseId: number): Promise<Project>{
+    const project = await Project.findOne({
+      where: [
+        {
+          caseId: caseId
+        }
+      ]
+    });
+    return project;
+  }
 }
