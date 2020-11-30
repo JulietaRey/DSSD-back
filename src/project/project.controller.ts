@@ -18,19 +18,6 @@ import { ProjectService } from './project.service';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Post(':projectId/protocol/:protocolId')
-  async startProtocol(
-    @Param('projectId') projectId: number,
-    @Param('protocolId') protocolId: number,
-  ): Promise<{
-    operacion: string;
-  }> {
-    await this.projectService.checkProtocol(projectId, protocolId);
-
-    //este return en realidad deberia devolver el puntaje y LUEGO de que termina
-    return this.projectService.executeProtocol(protocolId);
-  }
-
   @Get(':projectId/protocol/:protocolId/status')
   async getProtocolStatusFinished(
     @Param('projectId') projectId: number,
@@ -76,12 +63,12 @@ export class ProjectController {
     const protocol = await this.projectService.getProtocolByOrder(project.id, order);
 
     //esto no sabia bien cómo encararlo
-    const puntaje = await fetch(`http://localhost:5000/project/${project.id}/protocol/${protocol.id}`, {
-      method: 'POST'
-    });
+    await this.projectService.checkProtocol(project.id, protocol.id);
+    const res = await this.projectService.executeProtocol(protocol);
+    //este return en realidad deberia devolver el puntaje y LUEGO de que termina
+   
     return {
-      //aca se llama para calcular esto y actualizar la DB
-      protocolResult: 5
+      protocolResult: res.puntaje
     };
   }
 

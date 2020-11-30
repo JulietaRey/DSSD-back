@@ -43,21 +43,23 @@ export class ProjectService {
   }
 
   async executeProtocol(
-    id: number,
+    protocol: Protocol,
   ): Promise<{
-    operacion: string;
+    puntaje: number
   }> {
-    await this.protocolRepository.updateProtocol(id, {
+    await this.protocolRepository.updateProtocol(protocol.id, {
       estado: ProtocolStatus.inProgress,
       puntaje: 0,
+      ejecuciones: protocol.ejecuciones + 1
     });
-    setTimeout(() => {
-      this.protocolRepository.simulateStart(id, Math.floor(Math.random() * 11));
-    }, 15000);
+    const puntaje = Math.floor(Math.random() * 11);
 
-    return {
-      operacion: 'Comenzando protocolo...',
-    };
+    return new Promise(resolve => {
+      setTimeout(async() => {
+        await this.protocolRepository.simulateStart(protocol.id, puntaje);
+        resolve({ puntaje });
+    }, 15000);})
+
   }
 
   async getProtocolStatus(
