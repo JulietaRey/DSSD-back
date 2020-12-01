@@ -10,4 +10,5 @@ export interface Protocol {
   local: boolean;
   endDate: Date;
   startDate: Date;
+  owner: number;
 }

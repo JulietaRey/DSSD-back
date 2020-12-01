@@ -102,4 +102,22 @@ export class ProjectService {
     return project;
   }
 
+  async cancelProject(caseId: number) {
+    const project = await this.getProjectByCaseId(caseId);
+    project.result = "Cancelado"; 
+    await project.save();
+  }
+
+  async finishProject(caseId: number) {
+    const project = await this.getProjectByCaseId(caseId);
+    project.result = "Exitoso"; 
+    await project.save();
+  }
+
+  async markAsSeen(projectId: number) {
+    const project = await this.projectRepository.findOne(projectId);
+    project.seen = true; 
+    await project.save();  
+  }
+
 }

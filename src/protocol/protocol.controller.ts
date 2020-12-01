@@ -28,4 +28,9 @@ export class ProtocolController {
     });
     await this.protocolService.assignProtocol(protocolId, ownerId);
   }
+
+  @Get('/owners')
+  async getProtocolOwners() {
+    return this.protocolService.getPossibleOwners();
+  }
 }

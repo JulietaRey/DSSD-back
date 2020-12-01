@@ -21,6 +21,9 @@ export class Project extends BaseEntity {
 
   @Column() caseId: number;
 
+  @Column({ nullable: true }) result: string;
+  @Column({ default: false }) seen: boolean;
+
   @ManyToOne(type => Member, member => member.projects)
   owner: Member;
 

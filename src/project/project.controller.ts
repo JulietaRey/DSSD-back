@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Query,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -47,6 +48,22 @@ export class ProjectController {
     @Query('order') order: number, 
   ) : Promise<Protocol> {
     return this.projectService.getProtocolByOrder(projectId, order);
+  }
+
+
+  @Put(':projectId/seen')
+  async clearNotification(@Param('projectId') projectId: number) {
+    return this.projectService.markAsSeen(projectId);
+  }
+
+  @Put(':caseId/cancel')
+  async cancelProject(@Param('caseId') caseId: number) {
+    return this.projectService.cancelProject(caseId);
+  }
+
+  @Put(':caseId/success')
+  async finishProject(@Param('caseId') caseId: number) {
+    return this.projectService.finishProject(caseId);
   }
 
   @Post(':caseId/protocol')

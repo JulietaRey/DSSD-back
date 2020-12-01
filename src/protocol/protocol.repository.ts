@@ -43,14 +43,16 @@ export class ProtocolRepository extends Repository<Protocol> {
   }
 
   async createProtocols(protocolList: ProtocolDto[], project: Project) {
-    return Promise.all(protocolList.map(protocol => {
+    return Promise.all(protocolList.map(async ({owner, ...protocol}) => {
       const newProtocol = new Protocol();
+      const member = await Member.findOne(owner); 
       Object.assign(newProtocol, protocol, {
         project,
         fecha_inicio: protocol.startDate,
         fecha_fin: protocol.endDate,
+        owner: member
       });
-      return newProtocol.save();
+      await newProtocol.save();
     }))
   }
 }

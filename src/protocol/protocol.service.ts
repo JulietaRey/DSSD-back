@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
+import { USER_ROL } from 'src/constants';
 import { Member } from 'src/project/member.entity';
 import { ProtocolRepository } from './protocol.repository';
 
@@ -23,5 +25,12 @@ export class ProtocolService {
     const protocol = await this.protocolRepository.findOne(protocolId);
     protocol.owner = member;
     await protocol.save();
+  }
+  async getPossibleOwners() {
+    const users = await User.find({
+      rolId: USER_ROL
+    });
+    return users;
+    
   }
 }
