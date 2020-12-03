@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { USER_ROL } from 'src/constants';
 import { Member } from 'src/project/member.entity';
+import { In } from 'typeorm';
 import { ProtocolRepository } from './protocol.repository';
 
 @Injectable()
@@ -31,6 +32,17 @@ export class ProtocolService {
       rolId: USER_ROL
     });
     return users;
-    
+  }
+  async getMembersWithTheirProtocols() {
+    const users = await User.find({
+      rolId: USER_ROL
+    });
+    const userIds = users.map(user => user.id);
+    return Member.find({ 
+        where: {
+          id: In(userIds)
+        },
+      relations: ['protocols']
+      })
   }
 }

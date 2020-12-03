@@ -33,4 +33,9 @@ export class ProtocolController {
   async getProtocolOwners() {
     return this.protocolService.getPossibleOwners();
   }
+
+  @Get('/members')
+  async getMembersWithProtocols() {
+    return this.protocolService.getMembersWithTheirProtocols();
+  }
 }

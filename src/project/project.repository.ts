@@ -7,8 +7,13 @@ import { Project } from './project.entity';
 @EntityRepository(Project)
 export class ProjectRepository extends Repository<Project> {
   async getAll(ownerId: number): Promise<Project[]> {
-    const owner = await Member.findOne(ownerId, { relations: ['projects']});
-    return owner.projects;
+    if (ownerId) {
+      const owner = await Member.findOne(ownerId, { relations: ['projects']});
+      return owner.projects;
+    } 
+    return this.find({
+      relations: ['protocols']
+    });
   }
 
   async getProjectProtocols(projectId) : Promise<Protocol[]> {
